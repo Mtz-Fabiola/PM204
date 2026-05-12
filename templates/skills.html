@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Skills</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1> Skills a desbloquear</h1>
+
+<ul>
+    <li>JavaScript</li>
+    <li>React Native</li>
+    <li>Navegaciones</li>
+    <li>Comunicación con API</li>
+</ul>
+
+<h2>Preguntas</h2>
+
+<p>1. ¿Qué framework móvil se utilizará?</p>
+
+<input type="text" id="s1">
+
+<p>2. ¿Con qué se comunicará la app?</p>
+
+<input type="text" id="s2">
+
+<br><br>
+
+<button onclick="verificarSkills()">
+    Verificar
+</button>
+
+<div id="resultadoSkills"></div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

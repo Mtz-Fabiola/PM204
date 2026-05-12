@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reglas</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1> Cámara de las Reglas</h1>
+
+<ul>
+    <li>Respeto</li>
+    <li>No plagio</li>
+    <li>3 faltas = final</li>
+    <li>No entregar trabajos incompletos</li>
+</ul>
+
+<h2>Preguntas</h2>
+
+<p>1. ¿Cuántas faltas provocan final?</p>
+
+<input type="text" id="p1">
+
+<p>2. ¿Qué pasa con el plagio?</p>
+
+<input type="text" id="p2">
+
+<br><br>
+
+<button onclick="verificar()">
+    Verificar
+</button>
+
+<div id="resultado"></div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

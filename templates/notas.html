@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notas</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<h1> Oráculo de las Notas</h1>
+
+<ul>
+    <li>Actividades</li>
+    <li>Investigaciones</li>
+    <li>Prácticas</li>
+    <li>Video Reportes</li>
+    <li>Evidencias en Github</li>
+</ul>
+
+<h2>Preguntas</h2>
+
+<p>1. ¿Dónde se suben las evidencias?</p>
+
+<input type="text" id="n1">
+
+<p>2. ¿Qué tipo de reportes se entregan?</p>
+
+<input type="text" id="n2">
+
+<br><br>
+
+<button onclick="verificarNotas()">
+    Verificar
+</button>
+
+<div id="resultadoNotas"></div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
