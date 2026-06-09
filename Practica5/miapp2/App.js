@@ -20,7 +20,7 @@ export default function App() {
       <Text>------------------------------------</Text>
       <Saludo2/>
 
-      <Text>------------------------------------</Text>
+      <Text>--------------Mi perfil----------------</Text>
       <Perfil/>
 
       <StatusBar style="auto" />
