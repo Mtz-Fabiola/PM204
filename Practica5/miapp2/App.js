@@ -21,7 +21,14 @@ export default function App() {
       <Saludo2/>
 
       <Text>--------------Mi perfil----------------</Text>
-      <Perfil/>
+      <Perfil nombre = "Fabiola " carrera = "ISC" materia = "Programacion movil" cuatrimestre = "9no"/>
+
+      <Text>------------------------------------</Text>
+      <Perfil 
+      nombre = "Monserrat "
+      carrera = "Comercio" 
+      materia = "Algo" 
+      cuatrimestre = "6no"/>
 
       <StatusBar style="auto" />
 

@@ -1,17 +1,46 @@
+/* Perfil usando Desestructuracion */
 
-import { Text } from "react-native";
-import { View } from "react-native-web";
+import { View, Text, Button} from "react-native";
+import React,{useState} from 'react';
 
-export const Perfil=()=>{
+
+export const Perfil=({nombre,carrera,materia,cuatrimestre})=>{
+    const [mostrar, setMostrar] = useState(false)
+
     return(
             <View>
 
-                <Text>Nombre: Fabiola Martinez Rauda</Text>
-                <Text>Carrera: Ingenieria en Sistemas Computacionales</Text>
-                <Text>Materia: Programacion Movil</Text>
-                <Text>Cuatrimestre: Noveno </Text>
+                <Text> {nombre} </Text>
+
+                {mostrar && 
+                <>
+                <Text> {carrera}</Text>
+                <Text> {materia}</Text>
+                <Text> {cuatrimestre} </Text>
+                </>
+                }
+                <Button title = "Ver Perfil" onPress = {() => setMostrar(!mostrar)}/>
 
             </View>
 
     )
 } 
+
+
+/* import { View, Text } from "react-native";
+
+export const Perfil=(props)=>{
+    return(
+            <View>
+
+                <Text> {props.nombre} </Text>
+                <Text> {props.carrera}</Text>
+                <Text> {props.materia}</Text>
+                <Text> {props.cuatrimestre} </Text>
+
+            </View>
+
+    )
+} 
+
+ */
