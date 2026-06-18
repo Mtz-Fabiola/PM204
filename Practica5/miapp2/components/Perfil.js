@@ -1,46 +1,58 @@
 /* Perfil usando Desestructuracion */
 
-import { View, Text, Button} from "react-native";
-import React,{useState} from 'react';
+import { View, Text, Button, StyleSheet } from "react-native";
+import React, { useState } from 'react';
 
+export const Perfil = ({nombre, carrera, materia, cuatrimestre, style}) => {
 
-export const Perfil=({nombre,carrera,materia,cuatrimestre})=>{
-    const [mostrar, setMostrar] = useState(false)
+    const [mostrar, setMostrar] = useState(false);
 
     return(
-            <View>
+        <View style={[styles.tarjeta, style]}>
 
-                <Text> {nombre} </Text>
+            <Text style={styles.nombre}> {nombre} </Text>
 
-                {mostrar && 
-                <>
-                <Text> {carrera}</Text>
-                <Text> {materia}</Text>
-                <Text> {cuatrimestre} </Text>
-                </>
-                }
-                <Button title = "Ver Perfil" onPress = {() => setMostrar(!mostrar)}/>
+            {mostrar &&
+            <>
+                <Text style={styles.carrera}> {carrera} </Text>
+                <Text style={styles.otroTexto}> {materia} </Text>
+                <Text style={styles.otroTexto}> {cuatrimestre} </Text>
+            </>
+            }
 
-            </View>
+            <Button
+                title="VER PERFIL"
+                onPress={() => setMostrar(!mostrar)}
+            />
 
-    )
-} 
+        </View>
+    );
+}
 
+const styles = StyleSheet.create({
 
-/* import { View, Text } from "react-native";
+    nombre:{
+        fontSize: 24,
+        fontWeight: '900',
+        textTransform: 'uppercase',
+    },
 
-export const Perfil=(props)=>{
-    return(
-            <View>
+    tarjeta:{
+        borderWidth: 2,
+        padding: 25,
+        margin: 10,
+    },
 
-                <Text> {props.nombre} </Text>
-                <Text> {props.carrera}</Text>
-                <Text> {props.materia}</Text>
-                <Text> {props.cuatrimestre} </Text>
+    carrera:{
+        fontSize: 18,
+        color: "blue",
+        fontFamily: 'Roboto',
+    },
 
-            </View>
+    otroTexto:{
+        fontSize: 12,
+        fontFamily: 'Courier',
+        fontStyle: 'italic',
+    }
 
-    )
-} 
-
- */
+});

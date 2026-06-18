@@ -1,48 +1,38 @@
-/* Zona 1: Importaciones componentes y archivos */
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import {Saludo} from './components/Saludo';
-import {Saludo2} from './components/Saludo2';
-import {Perfil} from './components/Perfil';
+/*Zona 1: Importaciones, componentes y archivos*/
 
-/* Zona 2:  Main - Componentes */
+import {StatusBar} from 'expo-status-bar';
+import {StyleSheet, Text, View} from 'react-native';
+import MenuScreen from './screens/MenuScreen';
+
+
+
+
+/*Zona 2: Main - Renderizado de componentes */
 export default function App() {
   return (
     <View style={styles.container}>
 
-      <Image source={require('./assets/wave.png')}/>
-      <Text>Hola Mundo RN</Text>
-      <Text>------------------------------------</Text>
+      <MenuScreen> </MenuScreen>
 
-      <Saludo></Saludo>
-      <Saludo/>
-
-      <Text>------------------------------------</Text>
-      <Saludo2/>
-
-      <Text>--------------Mi perfil----------------</Text>
-      <Perfil nombre = "Fabiola " carrera = "ISC" materia = "Programacion movil" cuatrimestre = "9no"/>
-
-      <Text>------------------------------------</Text>
-      <Perfil 
-      nombre = "Monserrat "
-      carrera = "Comercio" 
-      materia = "Algo" 
-      cuatrimestre = "6no"/>
 
       <StatusBar style="auto" />
+    
 
     </View>
-  );
+  );  
+  
 }
 
-/* Zona 3: Estilos y Posicionamiento */
+
+/*Zona 3: Estilos y posicionamiento */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection:'column-reverse',
   },
-});
 
+
+});
