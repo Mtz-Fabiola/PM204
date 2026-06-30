@@ -1,178 +1,277 @@
-import React, {useState} from 'react';
-import {StatusBar} from 'expo-status-bar';
+// =======================
+// **IMPORTACIONES**
+// =======================
 
-import { StyleSheet, Text, TextInput, KeyboardAvoidingView, Platform, TouchableOpacity, 
-  ActivityIndicator, Alert, View} from 'react-native';
+// **React y useState: permite manejar estados en el componente**
+import React, { useState } from 'react';
+
+// **StatusBar: controla la barra superior del celular**
+import { StatusBar } from 'expo-status-bar';
+
+// **Importación de componentes de React Native**
+import {
+  StyleSheet, // **StyleSheet: estilos del componente**
+  Text, // **Text: muestra texto en pantalla**
+  TextInput, // **TextInput: campo para escribir datos**
+  View, // **View: contenedor principal**
+  TouchableOpacity, // **TouchableOpacity: botón presionable**
+
+  // =======================
+  // **ACTIVITYINDICATOR**
+  // =======================
+  // **Muestra un spinner (carga) cuando la app está procesando algo**
+  ActivityIndicator,
+
+  // =======================
+  // **KEYBOARDAVOIDINGVIEW**
+  // =======================
+  // **Evita que el teclado tape los inputs en pantalla**
+  KeyboardAvoidingView,
+
+  // **Platform: detecta si es Android o iOS**
+  Platform
+} from 'react-native';
 
 
-export default function ActivityIndicator_KeyboardAvoidingView(){
+// =======================
+// **COMPONENTE PRINCIPAL**
+// =======================
+export default function ActivityIndicator_KeyboardAvoidingView() {
 
-  const[nombre, setNombre] = useState('');
-  const[correo, setCorreo] = useState('');
-  const[contrasena, setContrasena] = useState('');
+  // =======================
+  // **ESTADOS**
+  // =======================
 
-  const[cargando, setCargando] = useState(false);
-  const[mensaje, setMensaje] = useState('');
+  const [n, setN] = useState(''); // **TextInput: nombre**
+  const [c, setC] = useState(''); // **TextInput: correo**
+  const [p, setP] = useState(''); // **TextInput: contraseña**
 
-  const iniciarSesion = () =>{
+  const [l, setL] = useState(false); // **ActivityIndicator: loading login**
+  const [ok, setOk] = useState(false); // **View: pantalla de bienvenida**
+  const [e, setE] = useState(''); // **Text: errores del formulario**
+  const [out, setOut] = useState(false); // **ActivityIndicator: loading logout**
 
-    if(nombre ===''|| correo === '' || contrasena===''){
-      Alert.alert('Campos vacíos', 'Complete todos los campos');
-      return;
-    }
 
-    setMensaje('');
-    setCargando(true);
+  // =======================
+  // **FUNCIÓN LOGIN**
+  // =======================
+  const login = () => {
 
+    // **Validación: campos vacíos (TextInput)**
+    if (!n || !c || !p) return setE('Completa campos');
+
+    // **Validación: correo debe incluir @**
+    if (!c.includes('@')) return setE('Correo inválido');
+
+    // **Limpia el error (Text)**
+    setE('');
+
+    // **ACTIVITYINDICATOR: activa loading**
+    setL(true);
+
+    // **Simulación de carga (como servidor)**
     setTimeout(() => {
 
-      setCargando(false);
+      // **ACTIVITYINDICATOR: desactiva loading**
+      setL(false);
 
-      setMensaje('Datos válidos. Bienvenido(a)'+nombre);
+      // **View: cambia a pantalla de bienvenida**
+      setOk(true);
 
-    }, 3000);
-
+    }, 1200);
   };
 
 
-  return(
+  // =======================
+  // **FUNCIÓN LOGOUT**
+  // =======================
+  const logout = () => {
 
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding':'height'}>
-    
-      <Text style={styles.titulo}>
-        ActivityIndicator y KeyboardAvoidingView
+    // **ACTIVITYINDICATOR: inicia loading de salida**
+    setOut(true);
 
-      </Text>
+    setTimeout(() => {
 
-      <TextInput
-        style={styles.input}
-        placeholder="Nombre"
-        value={nombre}
-        onChangeText={setNombre}
-      />
+      // **View: regresa a pantalla login**
+      setOk(false);
 
-      <TextInput
-        style={styles.input}
-        placeholder="Correo"
-        keyboardType="email-address"
-        value={correo}
-        onChangeText={setCorreo}
+      // **TextInput: limpia nombre**
+      setN('');
 
-      />
+      // **TextInput: limpia correo**
+      setC('');
 
-      <TextInput
-        style={styles.input}
-        placeholder="Contraseña"
-        secureTextEntry={true}
-        value={contrasena}
-        onChangeText={setContrasena}      
-      />
+      // **TextInput: limpia contraseña**
+      setP('');
 
-      {
-        cargando ?(
+      // **Text: limpia errores**
+      setE('');
 
-          <View style={styles.spinnerContainer}>
+      // **ACTIVITYINDICATOR: apaga loading**
+      setOut(false);
 
-            <ActivityIndicator
-              size="large"
-              color="blue"
-              animating={cargando}
-            />
+    }, 1000);
+  };
 
-            <Text>
-              Validando información...
-            </Text>
 
-          </View>
+  // =======================
+  // **PANTALLA BIENVENIDA (View)**
+  // =======================
+  if (ok)
+    return (
+      <View style={styles.ok}>
+
+        {/* **Text: muestra nombre del usuario** */}
+        <Text style={styles.t}>
+          Bienvenid@ {n}
+        </Text>
+
+        {/* =======================
+            **ACTIVITYINDICATOR**
+            ======================= */}
+        {out ? (
+          <>
+            {/* **ActivityIndicator: loading de salida** */}
+            <ActivityIndicator color="#002fa7" />
+
+            {/* **Text: mensaje de carga** */}
+            <Text style={styles.azul}>Cerrando...</Text>
+          </>
         ) : (
-
-          <TouchableOpacity
-            style={styles.boton}
-            onPress={iniciarSesion}
-          >
-
-          <Text style={styles.textoBoton}>
-            Iniciar Sesión
-          </Text>
-
+          // **TouchableOpacity: botón cerrar sesión**
+          <TouchableOpacity style={styles.btn} onPress={logout}>
+            <Text style={styles.btnt}>Cerrar sesión</Text>
           </TouchableOpacity>
+        )}
 
-        )
-      }
+        {/* **StatusBar: barra superior del sistema** */}
+        <StatusBar style="dark" />
+      </View>
+    );
 
-      <Text style={styles.mensaje}>
-        {mensaje}
-      </Text>
 
-      <StatusBar style="auto"/>
-    
+  // =======================
+  // **PANTALLA LOGIN (KeyboardAvoidingView)**
+  // =======================
+  return (
+    <KeyboardAvoidingView
+
+      style={styles.c} // **View principal con KeyboardAvoidingView**
+
+      // =======================
+      // **KEYBOARDAVOIDINGVIEW EXPLICACIÓN**
+      // =======================
+      // iOS: usa padding para subir inputs
+      // Android: usa height para ajustar pantalla
+      // evita que el teclado tape los TextInput
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+
+      {/* **Text: título Login** */}
+      <Text style={styles.t}>Login</Text>
+
+      {/* **TextInput: nombre** */}
+      <TextInput
+        style={styles.i}
+        placeholder="Nombre"
+        placeholderTextColor="#666"
+        value={n}
+        onChangeText={setN}
+      />
+
+      {/* **TextInput: correo** */}
+      <TextInput
+        style={styles.i}
+        placeholder="Correo"
+        placeholderTextColor="#666"
+        value={c}
+        onChangeText={setC}
+      />
+
+      {/* **TextInput: contraseña** */}
+      <TextInput
+        style={styles.i}
+        placeholder="Contraseña"
+        placeholderTextColor="#666"
+        value={p}
+        onChangeText={setP}
+        secureTextEntry
+      />
+
+      {/* **Text: error si existe** */}
+      {!!e && <Text style={styles.azul}>{e}</Text>}
+
+      {/* =======================
+          **ACTIVITYINDICATOR**
+          ======================= */}
+      {l ? (
+        // **ActivityIndicator: loading login**
+        <ActivityIndicator size="large" color="#002fa7" />
+      ) : (
+        // **TouchableOpacity: botón login**
+        <TouchableOpacity style={styles.btn} onPress={login}>
+          <Text style={styles.btnt}>Ingresar</Text>
+        </TouchableOpacity>
+      )}
+
+      {/* **StatusBar: barra del sistema**
+      */}
+      <StatusBar style="dark" />
     </KeyboardAvoidingView>
-
-
-
   );
-
-
 }
 
 
- const styles = StyleSheet.create({
+// =======================
+// **ESTILOS**
+// =======================
+const styles = StyleSheet.create({
 
-  container:{
-    flex:1,
-    backgroundColor:'#ffffff',
-    justifyContent:'center',
-    alignItems:'center',
-    padding: 20
+  // **KeyboardAvoidingView: contenedor login**
+  c: { flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
+
+  // **View: pantalla bienvenida**
+  ok: { flex: 1, backgroundColor: '#FFE862', justifyContent: 'center', alignItems: 'center' },
+
+  // **Text: títulos**
+  t: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#002fa7',
+    marginBottom: 20
   },
 
-  titulo:{
-    fontSize:24,
-    fontWeight:'bold',
-    marginBottom:20,
-    textAlign:'center'
-  },
-
-  input:{
-    width:'90%',
-    height: 50,
+  // **TextInput: campos**
+  i: {
+    width: '85%',
     borderWidth: 1,
-    borderColor: '#000',
-    borderRadius:8, 
-    paddingHorizontal:10,
-    marginVertical:5
+    borderColor: '#002fa7',
+    marginVertical: 6,
+    padding: 12,
+    fontSize: 18,
+    color: '#002fa7'
   },
 
-  boton:{
-    backgroundColor: '#2196F3',
-    width: '90%',
-    padding: 15,
-    borderRadius:8,
-    marginTop:20
+  // **TouchableOpacity: botón**
+  btn: {
+    backgroundColor: '#002fa7',
+    padding: 14,
+    marginTop: 15,
+    borderRadius: 8
   },
 
-  textoBoton:{
-    color:'#ffffff',
-    textAlign: 'center',
-    fontWeight: 'bold'
-
+  // **Text: texto botón**
+  btnt: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 20
   },
 
-  spinnerContainer:{
-    alignItems: 'center',
-    marginTop:20
-  },
-
-  mensaje:{
-
-    marginTop:20,
-    fontSize:18,
-    fontWeight:'bold',
-    color: 'green',
-    textAlign: 'center'
-
+  // **Text: mensajes de error**
+  azul: {
+    color: '#002fa7',
+    marginTop: 10,
+    fontWeight: 'bold',
+    fontSize: 18
   }
-
- });
+});
