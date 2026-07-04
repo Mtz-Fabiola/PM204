@@ -1,277 +1,267 @@
-// =======================
-// **IMPORTACIONES**
-// =======================
+//=====================================================
+// IMPORTACIONES
+//=====================================================
 
-// **React y useState: permite manejar estados en el componente**
 import React, { useState } from 'react';
-
-// **StatusBar: controla la barra superior del celular**
 import { StatusBar } from 'expo-status-bar';
-
-// **Importación de componentes de React Native**
 import {
-  StyleSheet, // **StyleSheet: estilos del componente**
-  Text, // **Text: muestra texto en pantalla**
-  TextInput, // **TextInput: campo para escribir datos**
-  View, // **View: contenedor principal**
-  TouchableOpacity, // **TouchableOpacity: botón presionable**
-
-  // =======================
-  // **ACTIVITYINDICATOR**
-  // =======================
-  // **Muestra un spinner (carga) cuando la app está procesando algo**
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableOpacity,
   ActivityIndicator,
-
-  // =======================
-  // **KEYBOARDAVOIDINGVIEW**
-  // =======================
-  // **Evita que el teclado tape los inputs en pantalla**
   KeyboardAvoidingView,
-
-  // **Platform: detecta si es Android o iOS**
-  Platform
+  Platform,
+  ScrollView,
+  Image
 } from 'react-native';
 
 
-// =======================
-// **COMPONENTE PRINCIPAL**
-// =======================
-export default function ActivityIndicator_KeyboardAvoidingView() {
+//=====================================================
+// COMPONENTE PRINCIPAL
+//=====================================================
 
-  // =======================
-  // **ESTADOS**
-  // =======================
+export default function LoginPantalla() {
 
-  const [n, setN] = useState(''); // **TextInput: nombre**
-  const [c, setC] = useState(''); // **TextInput: correo**
-  const [p, setP] = useState(''); // **TextInput: contraseña**
+  const AZUL = '#021a57';
 
-  const [l, setL] = useState(false); // **ActivityIndicator: loading login**
-  const [ok, setOk] = useState(false); // **View: pantalla de bienvenida**
-  const [e, setE] = useState(''); // **Text: errores del formulario**
-  const [out, setOut] = useState(false); // **ActivityIndicator: loading logout**
+  const [nombre, setNombre] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [confirmarContrasena, setConfirmarContrasena] = useState('');
 
+  const [cargando, setCargando] = useState(false);
+  const [logueado, setLogueado] = useState(false);
+  const [error, setError] = useState('');
+  const [saliendo, setSaliendo] = useState(false);
 
-  // =======================
-  // **FUNCIÓN LOGIN**
-  // =======================
-  const login = () => {
+  //=====================================================
+  // LOGIN
+  //=====================================================
 
-    // **Validación: campos vacíos (TextInput)**
-    if (!n || !c || !p) return setE('Completa campos');
+  const iniciarSesion = () => {
 
-    // **Validación: correo debe incluir @**
-    if (!c.includes('@')) return setE('Correo inválido');
+    if (!nombre || !correo || !contrasena || !confirmarContrasena)
+      return setError('Completa campos');
 
-    // **Limpia el error (Text)**
-    setE('');
+    if (!correo.includes('@'))
+      return setError('Correo inválido');
 
-    // **ACTIVITYINDICATOR: activa loading**
-    setL(true);
+    if (contrasena !== confirmarContrasena)
+      return setError('Las contraseñas no coinciden');
 
-    // **Simulación de carga (como servidor)**
+    setError('');
+    setCargando(true);
+
     setTimeout(() => {
-
-      // **ACTIVITYINDICATOR: desactiva loading**
-      setL(false);
-
-      // **View: cambia a pantalla de bienvenida**
-      setOk(true);
-
+      setCargando(false);
+      setLogueado(true);
     }, 1200);
   };
 
+  //=====================================================
+  // LOGOUT
+  //=====================================================
 
-  // =======================
-  // **FUNCIÓN LOGOUT**
-  // =======================
-  const logout = () => {
+  const cerrarSesion = () => {
 
-    // **ACTIVITYINDICATOR: inicia loading de salida**
-    setOut(true);
+    setSaliendo(true);
 
     setTimeout(() => {
-
-      // **View: regresa a pantalla login**
-      setOk(false);
-
-      // **TextInput: limpia nombre**
-      setN('');
-
-      // **TextInput: limpia correo**
-      setC('');
-
-      // **TextInput: limpia contraseña**
-      setP('');
-
-      // **Text: limpia errores**
-      setE('');
-
-      // **ACTIVITYINDICATOR: apaga loading**
-      setOut(false);
-
+      setLogueado(false);
+      setNombre('');
+      setCorreo('');
+      setContrasena('');
+      setConfirmarContrasena('');
+      setError('');
+      setSaliendo(false);
     }, 1000);
   };
 
+  //=====================================================
+  // PANTALLA LOGUEADO
+  //=====================================================
 
-  // =======================
-  // **PANTALLA BIENVENIDA (View)**
-  // =======================
-  if (ok)
+  if (logueado) {
     return (
-      <View style={styles.ok}>
+      <View style={[styles.pantallaLogueado, { backgroundColor: AZUL }]}>
 
-        {/* **Text: muestra nombre del usuario** */}
-        <Text style={styles.t}>
-          Bienvenid@ {n}
-        </Text>
+        <Text style={styles.titulo}>Bienvenid@ {nombre}</Text>
 
-        {/* =======================
-            **ACTIVITYINDICATOR**
-            ======================= */}
-        {out ? (
+        {saliendo ? (
           <>
-            {/* **ActivityIndicator: loading de salida** */}
-            <ActivityIndicator color="#002fa7" />
-
-            {/* **Text: mensaje de carga** */}
-            <Text style={styles.azul}>Cerrando...</Text>
+            <ActivityIndicator size="large" color="#fff" />
+            <Text style={styles.textoSalida}>Saliendo...</Text>
           </>
         ) : (
-          // **TouchableOpacity: botón cerrar sesión**
-          <TouchableOpacity style={styles.btn} onPress={logout}>
-            <Text style={styles.btnt}>Cerrar sesión</Text>
+          <TouchableOpacity style={styles.botonCerrarSesion} onPress={cerrarSesion}>
+            <Text style={styles.textoBoton}>Cerrar sesión</Text>
           </TouchableOpacity>
         )}
 
-        {/* **StatusBar: barra superior del sistema** */}
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
       </View>
     );
+  }
 
+  //=====================================================
+  // FORMULARIO
+  //=====================================================
 
-  // =======================
-  // **PANTALLA LOGIN (KeyboardAvoidingView)**
-  // =======================
   return (
     <KeyboardAvoidingView
-
-      style={styles.c} // **View principal con KeyboardAvoidingView**
-
-      // =======================
-      // **KEYBOARDAVOIDINGVIEW EXPLICACIÓN**
-      // =======================
-      // iOS: usa padding para subir inputs
-      // Android: usa height para ajustar pantalla
-      // evita que el teclado tape los TextInput
+      style={styles.contenedor}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
 
-      {/* **Text: título Login** */}
-      <Text style={styles.t}>Login</Text>
+      <ScrollView contentContainerStyle={styles.scrollContenido}>
 
-      {/* **TextInput: nombre** */}
-      <TextInput
-        style={styles.i}
-        placeholder="Nombre"
-        placeholderTextColor="#666"
-        value={n}
-        onChangeText={setN}
-      />
+        <Image
+          source={require('../assets/fondo1.png')}
+          style={styles.imagen}
+        />
 
-      {/* **TextInput: correo** */}
-      <TextInput
-        style={styles.i}
-        placeholder="Correo"
-        placeholderTextColor="#666"
-        value={c}
-        onChangeText={setC}
-      />
+        <Text style={[styles.titulo, { color: AZUL }]}>
+          Inicio de sesión
+        </Text>
 
-      {/* **TextInput: contraseña** */}
-      <TextInput
-        style={styles.i}
-        placeholder="Contraseña"
-        placeholderTextColor="#666"
-        value={p}
-        onChangeText={setP}
-        secureTextEntry
-      />
+        <TextInput
+          style={[styles.campoTexto, { borderColor: AZUL, color: AZUL }]}
+          placeholder="Nombre"
+          placeholderTextColor="#666"
+          value={nombre}
+          onChangeText={setNombre}
+        />
 
-      {/* **Text: error si existe** */}
-      {!!e && <Text style={styles.azul}>{e}</Text>}
+        <TextInput
+          style={[styles.campoTexto, { borderColor: AZUL, color: AZUL }]}
+          placeholder="Correo"
+          placeholderTextColor="#666"
+          value={correo}
+          onChangeText={setCorreo}
+        />
 
-      {/* =======================
-          **ACTIVITYINDICATOR**
-          ======================= */}
-      {l ? (
-        // **ActivityIndicator: loading login**
-        <ActivityIndicator size="large" color="#002fa7" />
-      ) : (
-        // **TouchableOpacity: botón login**
-        <TouchableOpacity style={styles.btn} onPress={login}>
-          <Text style={styles.btnt}>Ingresar</Text>
-        </TouchableOpacity>
-      )}
+        <TextInput
+          style={[styles.campoTexto, { borderColor: AZUL, color: AZUL }]}
+          placeholder="Contraseña"
+          placeholderTextColor="#666"
+          value={contrasena}
+          onChangeText={setContrasena}
+          secureTextEntry
+        />
 
-      {/* **StatusBar: barra del sistema**
-      */}
+        <TextInput
+          style={[styles.campoTexto, { borderColor: AZUL, color: AZUL }]}
+          placeholder="Confirmar contraseña"
+          placeholderTextColor="#666"
+          value={confirmarContrasena}
+          onChangeText={setConfirmarContrasena}
+          secureTextEntry
+        />
+
+        {!!error && (
+          <Text style={[styles.textoError, { color: AZUL }]}>
+            {error}
+          </Text>
+        )}
+
+        {cargando ? (
+          <ActivityIndicator size="large" color={AZUL} />
+        ) : (
+          <TouchableOpacity
+            style={[styles.botonIngresar, { backgroundColor: AZUL }]}
+            onPress={iniciarSesion}
+          >
+            <Text style={styles.textoBoton}>Ingresar</Text>
+          </TouchableOpacity>
+        )}
+
+        <View style={{ height: 120 }} />
+
+      </ScrollView>
+
       <StatusBar style="dark" />
     </KeyboardAvoidingView>
   );
 }
 
 
-// =======================
-// **ESTILOS**
-// =======================
+//=====================================================
+// ESTILOS (EN ESPAÑOL)
+//=====================================================
+
 const styles = StyleSheet.create({
 
-  // **KeyboardAvoidingView: contenedor login**
-  c: { flex: 1, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' },
+  contenedor: {
+    flex: 1,
+    backgroundColor: '#fff'
+  },
 
-  // **View: pantalla bienvenida**
-  ok: { flex: 1, backgroundColor: '#FFE862', justifyContent: 'center', alignItems: 'center' },
+  scrollContenido: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 40
+  },
 
-  // **Text: títulos**
-  t: {
+  pantallaLogueado: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  titulo: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#002fa7',
-    marginBottom: 20
+    marginBottom: 20,
+    color: '#fff'
   },
 
-  // **TextInput: campos**
-  i: {
+  campoTexto: {
     width: '85%',
     borderWidth: 1,
-    borderColor: '#002fa7',
     marginVertical: 6,
     padding: 12,
-    fontSize: 18,
-    color: '#002fa7'
+    fontSize: 18
   },
 
-  // **TouchableOpacity: botón**
-  btn: {
-    backgroundColor: '#002fa7',
+  botonIngresar: {
     padding: 14,
     marginTop: 15,
     borderRadius: 8
   },
 
-  // **Text: texto botón**
-  btnt: {
+  botonCerrarSesion: {
+    padding: 14,
+    marginTop: 15,
+    borderRadius: 8,
+    backgroundColor: '#ac0707'
+  },
+
+  textoBoton: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 20
   },
 
-  // **Text: mensajes de error**
-  azul: {
-    color: '#002fa7',
+  textoError: {
+    marginTop: 10,
+    fontWeight: 'bold',
+    fontSize: 16
+  },
+
+  textoSalida: {
+    color: '#fff',
     marginTop: 10,
     fontWeight: 'bold',
     fontSize: 18
+  },
+
+  imagen: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+    borderRadius: 10
   }
 });
