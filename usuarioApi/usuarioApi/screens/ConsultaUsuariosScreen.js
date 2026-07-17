@@ -1,16 +1,26 @@
-import React from 'react';
-import {SafeAreaView,View,Text,FlatList,StyleSheet,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {SafeAreaView,View,Text,FlatList,StyleSheet,} from 'react-native';
 
 export default function ConsultaUsuariosScreen() {
 
-  const usuarios = [
-    { id: '1', nombre: 'Isay Guerra', edad: 22 },
-    { id: '2', nombre: 'Ana López', edad: 19 },
-    { id: '3', nombre: 'Carlos Gonzalez', edad: 25 },
-    { id: '4', nombre: 'Bjork Guerra', edad: 21 },
-    { id: '5', nombre: 'Luisa Martínez', edad: 28 },
-  ];
+  const [usuarios, setUsuarios] = useState ([]);
+
+  const obtenerUsuarios = async () =>{
+    try {
+
+      const respuesta = await fetch('http://192.168.210.231:5000/v1/usuarios');
+      const datos = await respuesta .json();
+      console.log ("Respuesta API: ", datos);
+
+      setUsuarios(datos.usuarios)
+
+    }catch(error){
+      console.log("Error de API", error)
+
+    }
+  }
+
+  useEffect(() => {obtenerUsuarios();},[]) 
 
   const renderTarjeta = ({ item }) => (
     <View style={styles.card}>
@@ -49,26 +59,9 @@ export default function ConsultaUsuariosScreen() {
 
 const styles = StyleSheet.create({
 
-  container: {
-    flex: 1,
-    backgroundColor: '#F5F7FA',
-    padding: 20,
-  },
-
-  titulo: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#1F2937',
-    marginBottom: 20,
-  },
-
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    padding: 18,
-    marginBottom: 15,
-    elevation: 4,
+  container: { flex: 1, backgroundColor: '#F5F7FA', padding: 20,},
+  titulo: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#1F2937', marginBottom: 20,},
+  card: { backgroundColor: '#FFFFFF', borderRadius: 15, padding: 18, marginBottom: 15, elevation: 4,
 
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -78,22 +71,8 @@ const styles = StyleSheet.create({
       height: 3,
     },
   },
-
-  nombre: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#2563EB',
-  },
-
-  linea: {
-    height: 1,
-    backgroundColor: '#E5E7EB',
-    marginVertical: 10,
-  },
-
-  info: {
-    fontSize: 16,
-    color: '#4B5563',
-  },
+  nombre: { fontSize: 20, fontWeight: 'bold', color: '#2563EB',},
+  linea: { height: 1, backgroundColor: '#E5E7EB', marginVertical: 10,},
+  info: { fontSize: 16, color: '#4B5563',},
 
 });
