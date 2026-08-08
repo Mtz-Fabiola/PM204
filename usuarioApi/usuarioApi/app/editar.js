@@ -21,7 +21,7 @@ export default function Editar() {
 
     try {
 
-      const respuesta = await fetch(`http://192.168.1.174:5000/v1/usuarios/${id}`, {
+      const respuesta = await fetch(`http://192.168.1.98:5000/v1/usuarios/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

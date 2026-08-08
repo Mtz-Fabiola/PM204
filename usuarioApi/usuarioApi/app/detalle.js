@@ -11,7 +11,7 @@ export default function Detalle() {
     try {
 
       const respuesta = await fetch(
-        `http://192.168.1.174:5000/v1/usuarios/${id}`,
+        `http://192.168.1.98:5000/v1/usuarios/${id}`,
         {
           method: "DELETE",
         }

@@ -1,48 +1,82 @@
 import React, { useState } from 'react';
-import {View,SafeAreaView,Text,TextInput,Pressable,StyleSheet, Alert, Platform} from 'react-native';
+import {
+  View,
+  SafeAreaView,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  Alert,
+  Platform,
+} from 'react-native';
 
 export default function AltaUsuariosScreen() {
   const [nombre, setNombre] = useState('');
   const [edad, setEdad] = useState('');
-  const [cargando, setCargando] = useState (false);
+  const [cargando, setCargando] = useState(false);
 
-  const mostrarMensaje = (titulo, mensaje)=>{
-    if (Platform.OS === 'web'){
-      window.alert(`${titulo}\n ${mensaje}`);
-    }else{
+  const mostrarMensaje = (titulo, mensaje) => {
+    if (Platform.OS === 'web') {
+      window.alert(`${titulo}\n${mensaje}`);
+    } else {
       Alert.alert(titulo, mensaje);
     }
-  }
+  };
 
-  const guardarUsuario = async()=>{
-    if(nombre.trim() === '' || edad.trim() === '' ){
-      mostrarMensaje("Vacios", "Completa edad y nombre en el formulario");
+  const guardarUsuario = async () => {
+    if (nombre.trim() === '' || edad.trim() === '') {
+      mostrarMensaje(
+        'Campos vacíos',
+        'Completa edad y nombre en el formulario'
+      );
       return;
     }
 
     try {
       setCargando(true);
-      const respuesta = await fetch('http://192.168.1.174:5000/v1/usuarios',
+
+      const respuesta = await fetch(
+        'http://192.168.1.98:5000/v1/usuarios',
         {
-          method:"POST",
-          headers:{"Content-Type":"application/json"},
-          body:JSON.stringify({nombre:nombre, edad:Number(edad)})
-        });
-        const datos = await respuesta.json();
-        console.log(datos);
-        mostrarMensaje("Exito", "Usuario Registrado")
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nombre: nombre,
+            edad: Number(edad),
+          }),
+        }
+      );
 
-        setNombre('');
-        setEdad('');
+      const datos = await respuesta.json();
 
-    }catch(error){
-      mostrarMensaje("Error", "No fue posible guardar");
-      console.log("Error API", error);
+      console.log('Respuesta API:', datos);
+
+      if (!respuesta.ok) {
+        throw new Error('Error al registrar usuario');
+      }
+
+      mostrarMensaje(
+        'Éxito',
+        'Usuario registrado correctamente'
+      );
+
+      setNombre('');
+      setEdad('');
+
+    } catch (error) {
+      console.log('Error API:', error);
+
+      mostrarMensaje(
+        'Error',
+        'No fue posible guardar'
+      );
+
+    } finally {
+      setCargando(false);
     }
-    finally{
-      setCargando(false)
-    }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,6 +90,7 @@ export default function AltaUsuariosScreen() {
         <TextInput
           style={styles.input}
           placeholder="Nombre del usuario"
+          placeholderTextColor="#6B7280"
           value={nombre}
           onChangeText={setNombre}
         />
@@ -63,14 +98,24 @@ export default function AltaUsuariosScreen() {
         <TextInput
           style={styles.input}
           placeholder="Edad del usuario"
+          placeholderTextColor="#6B7280"
           keyboardType="numeric"
           value={edad}
           onChangeText={setEdad}
         />
 
-        <Pressable style={styles.boton} onPress={guardarUsuario} disable={cargando}>
+        <Pressable
+          style={[
+            styles.boton,
+            cargando && styles.botonDeshabilitado,
+          ]}
+          onPress={guardarUsuario}
+          disabled={cargando}
+        >
           <Text style={styles.textoBoton}>
-          {cargando? "Guardando...":"Agregar Usuario"}  
+            {cargando
+              ? 'Guardando...'
+              : 'Agregar Usuario'}
           </Text>
         </Pressable>
 
@@ -95,10 +140,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: 25,
     borderRadius: 15,
-    elevation: 5, 
+
+    elevation: 5,
+
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowRadius: 8,
+
     shadowOffset: {
       width: 0,
       height: 3,
@@ -121,15 +169,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginBottom: 18,
     backgroundColor: '#F9FAFB',
+
     fontSize: 16,
+
+    // Color del texto que escribes
+    color: '#111827',
+
+    // Color del placeholder
+    placeholderTextColor: '#6B7280',
   },
 
   boton: {
-    backgroundColor: '#29bb0c',
+    backgroundColor: '#29BB0C',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10,
+  },
+
+  botonDeshabilitado: {
+    backgroundColor: '#86EFAC',
   },
 
   textoBoton: {
